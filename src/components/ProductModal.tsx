@@ -1,5 +1,6 @@
 
-import { X, Image, Video } from 'lucide-react';
+import { X, Image, Video, ShoppingCart, MessageCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import type { Product } from '@/types/product';
 
 interface ProductModalProps {
@@ -21,41 +22,55 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
     return 'from-gray-500 to-slate-500';
   };
 
+  const handleBuyNow = () => {
+    const message = `Hi! I'd like to purchase ${product.sku} - ${product.features}. Price: ${product.minPrice === product.maxPrice ? `${product.minPrice} AED` : `${product.minPrice}-${product.maxPrice} AED`}`;
+    const whatsappUrl = `https://wa.me/971XXXXXXXXX?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleWhatsAppChat = () => {
+    const message = `Hi! I need more information about ${product.sku} - ${product.features}`;
+    const whatsappUrl = `https://wa.me/971XXXXXXXXX?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-purple-400/30">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm">
+      <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-t-3xl md:rounded-3xl w-full md:max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto border border-purple-400/30">
         {/* Header */}
-        <div className="flex justify-between items-start mb-6">
-          <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium text-white bg-gradient-to-r ${getCategoryColor(product.features)}`}>
-            {product.sku}
+        <div className="sticky top-0 bg-gradient-to-br from-slate-900 to-purple-900 p-4 md:p-6 border-b border-purple-400/20">
+          <div className="flex justify-between items-start">
+            <div className={`inline-block px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium text-white bg-gradient-to-r ${getCategoryColor(product.features)}`}>
+              {product.sku}
+            </div>
+            <button
+              onClick={onClose}
+              className="text-purple-300 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+            >
+              <X className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="text-purple-300 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
-          >
-            <X className="w-6 h-6" />
-          </button>
         </div>
 
-        {/* Media Section */}
-        {(product.photo || product.video) && (
-          <div className="mb-8">
+        <div className="p-4 md:p-8">
+          {/* Media Section */}
+          <div className="mb-6 md:mb-8">
             <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-4">Media</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
               {/* Photo */}
               {product.photo ? (
                 <div className="rounded-xl overflow-hidden bg-white/5">
                   <img 
                     src={product.photo} 
                     alt={product.sku}
-                    className="w-full h-64 object-cover"
+                    className="w-full h-48 md:h-64 object-cover"
                   />
                 </div>
               ) : (
-                <div className="h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
                   <div className="text-center text-purple-300">
-                    <Image className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p className="text-sm opacity-50">Photo will be added</p>
+                    <Image className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
+                    <p className="text-xs md:text-sm opacity-50">Photo will be added soon</p>
                   </div>
                 </div>
               )}
@@ -66,60 +81,96 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                   <video 
                     src={product.video}
                     controls
-                    className="w-full h-64 object-cover"
+                    className="w-full h-48 md:h-64 object-cover"
                     poster={product.photo}
                   >
                     Your browser does not support the video tag.
                   </video>
                 </div>
               ) : (
-                <div className="h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
                   <div className="text-center text-purple-300">
-                    <Video className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p className="text-sm opacity-50">Video will be added</p>
+                    <Video className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
+                    <p className="text-xs md:text-sm opacity-50">Video will be added soon</p>
                   </div>
                 </div>
               )}
             </div>
           </div>
-        )}
 
-        {/* Content */}
-        <div className="space-y-6">
-          {/* Product Details */}
-          {product.details && (
+          {/* Content */}
+          <div className="space-y-6">
+            {/* Product Details */}
+            {product.details && (
+              <div>
+                <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-2">Specifications</h3>
+                <div className="text-white text-base md:text-lg font-mono bg-white/5 rounded-lg p-3 md:p-4">
+                  {product.details}
+                </div>
+              </div>
+            )}
+
+            {/* Features */}
             <div>
-              <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-2">Specifications</h3>
-              <div className="text-white text-lg font-mono bg-white/5 rounded-lg p-4">
-                {product.details}
+              <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-2">Features</h3>
+              <div className="text-white text-base md:text-xl leading-relaxed bg-white/5 rounded-lg p-3 md:p-4">
+                {product.features}
               </div>
             </div>
-          )}
 
-          {/* Features */}
-          <div>
-            <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-2">Features</h3>
-            <div className="text-white text-xl leading-relaxed bg-white/5 rounded-lg p-4">
-              {product.features}
+            {/* Price */}
+            <div>
+              <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-2">Price Range</h3>
+              <div className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                {product.minPrice === product.maxPrice 
+                  ? `${product.minPrice} AED`
+                  : `${product.minPrice}-${product.maxPrice} AED`
+                }
+              </div>
             </div>
-          </div>
 
-          {/* Price */}
-          <div>
-            <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-2">Price Range</h3>
-            <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              {product.minPrice === product.maxPrice 
-                ? `${product.minPrice} AED`
-                : `${product.minPrice}-${product.maxPrice} AED`
-              }
+            {/* Quality Assurance */}
+            <div className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-xl p-4 border border-green-400/30">
+              <h4 className="text-green-300 font-medium mb-2">Quality Guarantee</h4>
+              <p className="text-green-100 text-sm">
+                Premium laboratory-grade silicone • Edible-grade materials • Health & safety assured
+              </p>
             </div>
-          </div>
 
-          {/* Call to Action */}
-          <div className="pt-6 border-t border-purple-400/20">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-center">
-              <h4 className="text-white text-lg font-medium mb-2">Interested in this product?</h4>
-              <p className="text-purple-100 text-sm">Contact us for availability and ordering information</p>
+            {/* Delivery Info */}
+            <div className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-xl p-4 border border-blue-400/30">
+              <h4 className="text-blue-300 font-medium mb-2">Free Delivery in UAE</h4>
+              <p className="text-blue-100 text-sm">
+                2-3 days delivery • Cash on delivery available • Anonymous packaging for privacy
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3 pt-4">
+              <Button 
+                onClick={handleBuyNow}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Buy Now - Cash on Delivery
+              </Button>
+              
+              <Button 
+                onClick={handleWhatsAppChat}
+                variant="outline"
+                className="w-full border-green-400 text-green-400 hover:bg-green-400 hover:text-white font-medium py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300"
+              >
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Chat on WhatsApp
+              </Button>
+            </div>
+
+            {/* Free Gifts */}
+            <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl p-4 border border-purple-400/30 text-center">
+              <h4 className="text-purple-300 font-medium mb-2">🎁 Free Gifts Included</h4>
+              <p className="text-purple-100 text-sm">
+                Every order includes surprise gifts + sterilizing liquid for cleaning
+              </p>
             </div>
           </div>
         </div>
