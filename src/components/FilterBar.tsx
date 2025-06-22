@@ -19,12 +19,12 @@ export const FilterBar = ({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+    <div className="flex flex-col gap-4">
       {/* Category Filter */}
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => onCategoryChange('all')}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+          className={`px-3 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
             selectedCategory === 'all'
               ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
               : 'bg-white/10 text-purple-300 hover:bg-white/20'
@@ -36,7 +36,7 @@ export const FilterBar = ({
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+            className={`px-3 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
               selectedCategory === category
                 ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                 : 'bg-white/10 text-purple-300 hover:bg-white/20'
@@ -47,31 +47,38 @@ export const FilterBar = ({
         ))}
       </div>
 
-      {/* Price Range Filter */}
-      <div className="flex items-center gap-4 min-w-[300px]">
-        <span className="text-purple-300 text-sm whitespace-nowrap">Price Range:</span>
-        <div className="flex items-center gap-2 flex-1">
-          <input
-            type="range"
-            min="0"
-            max="2000"
-            step="50"
-            value={priceRange[0]}
-            onChange={(e) => onPriceRangeChange([Number(e.target.value), priceRange[1]])}
-            className="flex-1 accent-purple-500"
-          />
-          <span className="text-purple-300 text-sm whitespace-nowrap">
-            {priceRange[0]}-{priceRange[1]} AED
-          </span>
-          <input
-            type="range"
-            min="0"
-            max="2000"
-            step="50"
-            value={priceRange[1]}
-            onChange={(e) => onPriceRangeChange([priceRange[0], Number(e.target.value)])}
-            className="flex-1 accent-purple-500"
-          />
+      {/* Price Range Filter - Mobile Optimized */}
+      <div className="w-full">
+        <div className="text-purple-300 text-sm mb-3">
+          Price Range: {priceRange[0]}-{priceRange[1]} AED
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-purple-300 text-xs w-8">Min:</span>
+            <input
+              type="range"
+              min="0"
+              max="2000"
+              step="50"
+              value={priceRange[0]}
+              onChange={(e) => onPriceRangeChange([Number(e.target.value), priceRange[1]])}
+              className="flex-1 accent-purple-500"
+            />
+            <span className="text-purple-300 text-xs w-12 text-right">{priceRange[0]}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-purple-300 text-xs w-8">Max:</span>
+            <input
+              type="range"
+              min="0"
+              max="2000"
+              step="50"
+              value={priceRange[1]}
+              onChange={(e) => onPriceRangeChange([priceRange[0], Number(e.target.value)])}
+              className="flex-1 accent-purple-500"
+            />
+            <span className="text-purple-300 text-xs w-12 text-right">{priceRange[1]}</span>
+          </div>
         </div>
       </div>
     </div>
