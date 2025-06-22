@@ -1,5 +1,5 @@
 
-import { X } from 'lucide-react';
+import { X, Image, Video } from 'lucide-react';
 import type { Product } from '@/types/product';
 
 interface ProductModalProps {
@@ -23,7 +23,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-purple-400/30">
+      <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-purple-400/30">
         {/* Header */}
         <div className="flex justify-between items-start mb-6">
           <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium text-white bg-gradient-to-r ${getCategoryColor(product.features)}`}>
@@ -36,6 +36,53 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
             <X className="w-6 h-6" />
           </button>
         </div>
+
+        {/* Media Section */}
+        {(product.photo || product.video) && (
+          <div className="mb-8">
+            <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-4">Media</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Photo */}
+              {product.photo ? (
+                <div className="rounded-xl overflow-hidden bg-white/5">
+                  <img 
+                    src={product.photo} 
+                    alt={product.sku}
+                    className="w-full h-64 object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                  <div className="text-center text-purple-300">
+                    <Image className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p className="text-sm opacity-50">Photo will be added</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Video */}
+              {product.video ? (
+                <div className="rounded-xl overflow-hidden bg-white/5">
+                  <video 
+                    src={product.video}
+                    controls
+                    className="w-full h-64 object-cover"
+                    poster={product.photo}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ) : (
+                <div className="h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                  <div className="text-center text-purple-300">
+                    <Video className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p className="text-sm opacity-50">Video will be added</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Content */}
         <div className="space-y-6">
@@ -71,7 +118,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           {/* Call to Action */}
           <div className="pt-6 border-t border-purple-400/20">
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-center">
-              <h4 className="text-white text-lg font-medium mb-2">Intereste in this product?</h4>
+              <h4 className="text-white text-lg font-medium mb-2">Interested in this product?</h4>
               <p className="text-purple-100 text-sm">Contact us for availability and ordering information</p>
             </div>
           </div>

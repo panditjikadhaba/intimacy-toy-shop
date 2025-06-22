@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Image, Video } from 'lucide-react';
 import type { Product } from '@/types/product';
 
 interface ProductCardProps {
@@ -27,7 +28,30 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full">
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full flex flex-col">
+        {/* Media Section */}
+        {product.photo ? (
+          <div className="relative mb-4 rounded-lg overflow-hidden bg-white/5">
+            <img 
+              src={product.photo} 
+              alt={product.sku}
+              className="w-full h-48 object-cover"
+            />
+            {product.video && (
+              <div className="absolute top-2 right-2 bg-black/50 rounded-full p-2">
+                <Video className="w-4 h-4 text-white" />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="mb-4 h-48 bg-white/5 rounded-lg flex items-center justify-center border-2 border-dashed border-white/20">
+            <div className="text-center text-purple-300">
+              <Image className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p className="text-sm opacity-50">Photo will be added</p>
+            </div>
+          </div>
+        )}
+
         {/* SKU Badge */}
         <div className={`inline-block px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r ${getCategoryColor(product.features)} mb-4`}>
           {product.sku}
@@ -41,7 +65,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
         )}
 
         {/* Features */}
-        <h3 className="text-white text-lg font-medium mb-4 line-clamp-3 leading-relaxed">
+        <h3 className="text-white text-lg font-medium mb-4 line-clamp-3 leading-relaxed flex-grow">
           {product.features}
         </h3>
 

@@ -6,4 +6,6 @@ export interface Product {
   minPrice: number;
   maxPrice: number;
   priceRange: string;
+  photo?: string;
+  video?: string;
 }
