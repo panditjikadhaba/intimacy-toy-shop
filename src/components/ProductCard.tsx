@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Image, ShoppingCart } from 'lucide-react';
+import { Image, ShoppingCart, Video } from 'lucide-react';
+import { getVideoUrl } from '@/utils/mediaUtils';
 import type { Product } from '@/types/product';
 
 interface ProductCardProps {
@@ -20,6 +21,8 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
     return 'from-gray-500 to-slate-500';
   };
 
+  const videoUrl = getVideoUrl(product.sku);
+
   return (
     <div
       className="group cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
@@ -28,12 +31,34 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full flex flex-col">
-        {/* Placeholder for Media Section */}
-        <div className="mb-4 h-40 md:h-48 bg-white/5 rounded-lg flex items-center justify-center border-2 border-dashed border-white/20">
-          <div className="text-center text-purple-300">
-            <Image className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-xs md:text-sm opacity-50">Photo coming soon</p>
-          </div>
+        {/* Media Section */}
+        <div className="mb-4 h-40 md:h-48 bg-white/5 rounded-lg flex items-center justify-center border-2 border-dashed border-white/20 relative overflow-hidden">
+          {videoUrl ? (
+            <div className="relative w-full h-full">
+              <video 
+                className="w-full h-full object-cover rounded-lg"
+                preload="metadata"
+                muted
+              >
+                <source src={videoUrl} type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                  <Video className="w-6 h-6 text-white" />
+                </div>
+              </div>
+              <div className="absolute top-2 right-2">
+                <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                  Video Available
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center text-purple-300">
+              <Image className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 opacity-50" />
+              <p className="text-xs md:text-sm opacity-50">Media coming soon</p>
+            </div>
+          )}
         </div>
 
         {/* SKU Badge */}
@@ -73,7 +98,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
 
         {/* Hover Effect - Desktop */}
         <div className={`mt-4 text-purple-300 text-sm transition-opacity duration-300 hidden md:block ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-          Tap to view details →
+          {videoUrl ? 'Tap to view video & details →' : 'Tap to view details →'}
         </div>
       </div>
     </div>

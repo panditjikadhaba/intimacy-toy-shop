@@ -1,5 +1,7 @@
-import { X, Image, Video, ShoppingCart, MessageCircle } from 'lucide-react';
+import { X, Image, Video, ShoppingCart, MessageCircle, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useState, useRef } from 'react';
+import { getVideoUrl } from '@/utils/mediaUtils';
 import type { Product } from '@/types/product';
 
 interface ProductModalProps {
@@ -9,6 +11,9 @@ interface ProductModalProps {
 }
 
 export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   if (!isOpen) return null;
 
   const getCategoryColor = (features: string) => {
@@ -33,6 +38,19 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
     window.open(whatsappUrl, '_blank');
   };
 
+  const toggleVideo = () => {
+    if (videoRef.current) {
+      if (isVideoPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsVideoPlaying(!isVideoPlaying);
+    }
+  };
+
+  const videoUrl = getVideoUrl(product.sku);
+
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-t-3xl md:rounded-3xl w-full md:max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto border border-purple-400/30">
@@ -54,21 +72,54 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
         <div className="p-4 md:p-8">
           {/* Media Section */}
           <div className="mb-6 md:mb-8">
-            <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-4">Media</h3>
+            <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-4">Product Media</h3>
             <div className="grid grid-cols-1 gap-4 md:gap-6">
+              
+              {/* Video Section */}
+              {videoUrl ? (
+                <div className="relative h-48 md:h-64 bg-black rounded-xl overflow-hidden border border-purple-400/30">
+                  <video
+                    ref={videoRef}
+                    className="w-full h-full object-cover"
+                    onPlay={() => setIsVideoPlaying(true)}
+                    onPause={() => setIsVideoPlaying(false)}
+                    onEnded={() => setIsVideoPlaying(false)}
+                    controls
+                    preload="metadata"
+                  >
+                    <source src={videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  
+                  {/* Custom Play Button Overlay */}
+                  <div className="absolute top-4 left-4">
+                    <div className="bg-black/50 backdrop-blur-sm rounded-full p-2">
+                      <Video className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Video Label */}
+                  <div className="absolute bottom-4 left-4">
+                    <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1">
+                      <p className="text-white text-xs font-medium">Product Demo Video</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Video Placeholder */
+                <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                  <div className="text-center text-purple-300">
+                    <Video className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
+                    <p className="text-xs md:text-sm opacity-50">Video will be added soon</p>
+                  </div>
+                </div>
+              )}
+
               {/* Photo Placeholder */}
               <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
                 <div className="text-center text-purple-300">
                   <Image className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
                   <p className="text-xs md:text-sm opacity-50">Photo will be added soon</p>
-                </div>
-              </div>
-
-              {/* Video Placeholder */}
-              <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
-                <div className="text-center text-purple-300">
-                  <Video className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
-                  <p className="text-xs md:text-sm opacity-50">Video will be added soon</p>
                 </div>
               </div>
             </div>

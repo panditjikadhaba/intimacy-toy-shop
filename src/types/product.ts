@@ -1,4 +1,3 @@
-
 export interface Product {
   sku: string;
   details: string;
