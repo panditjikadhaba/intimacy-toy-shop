@@ -1,9 +1,9 @@
-
 import { useState, useMemo } from 'react';
 import { Search, X, Shield, Truck, Gift, MessageCircle } from 'lucide-react';
 import { ProductCard } from '@/components/ProductCard';
 import { ProductModal } from '@/components/ProductModal';
 import { FilterBar } from '@/components/FilterBar';
+import { AdminPanel } from '@/components/AdminPanel';
 import { products } from '@/data/products';
 import type { Product } from '@/types/product';
 
@@ -168,6 +168,9 @@ const Index = () => {
           onClose={() => setSelectedProduct(null)}
         />
       )}
+
+      {/* Admin Panel */}
+      <AdminPanel />
     </div>
   );
 };
