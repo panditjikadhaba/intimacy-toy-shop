@@ -3,7 +3,6 @@ import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MediaUploader } from '@/components/MediaUploader';
 import { products } from '@/data/products';
 import type { Product } from '@/types/product';
 
@@ -117,14 +116,6 @@ export const AdminPanel = () => {
                 </div>
               </div>
             </div>
-
-            {/* Media Upload */}
-            <MediaUploader
-              currentPhoto={formData.photo}
-              currentVideo={formData.video}
-              onPhotoUpload={(url) => setFormData({ ...formData, photo: url })}
-              onVideoUpload={(url) => setFormData({ ...formData, video: url })}
-            />
 
             {/* Action Buttons */}
             <div className="flex gap-4 pt-6">

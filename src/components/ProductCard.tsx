@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { Image, Video, ShoppingCart } from 'lucide-react';
+import { Image, ShoppingCart } from 'lucide-react';
 import type { Product } from '@/types/product';
 
 interface ProductCardProps {
@@ -29,28 +28,13 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full flex flex-col">
-        {/* Media Section */}
-        {product.photo ? (
-          <div className="relative mb-4 rounded-lg overflow-hidden bg-white/5">
-            <img 
-              src={product.photo} 
-              alt={product.sku}
-              className="w-full h-40 md:h-48 object-cover"
-            />
-            {product.video && (
-              <div className="absolute top-2 right-2 bg-black/50 rounded-full p-2">
-                <Video className="w-3 h-3 md:w-4 md:h-4 text-white" />
-              </div>
-            )}
+        {/* Placeholder for Media Section */}
+        <div className="mb-4 h-40 md:h-48 bg-white/5 rounded-lg flex items-center justify-center border-2 border-dashed border-white/20">
+          <div className="text-center text-purple-300">
+            <Image className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 opacity-50" />
+            <p className="text-xs md:text-sm opacity-50">Photo coming soon</p>
           </div>
-        ) : (
-          <div className="mb-4 h-40 md:h-48 bg-white/5 rounded-lg flex items-center justify-center border-2 border-dashed border-white/20">
-            <div className="text-center text-purple-300">
-              <Image className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs md:text-sm opacity-50">Photo coming soon</p>
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* SKU Badge */}
         <div className={`inline-block px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r ${getCategoryColor(product.features)} mb-3 md:mb-4 self-start`}>

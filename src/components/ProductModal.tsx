@@ -1,4 +1,3 @@
-
 import { X, Image, Video, ShoppingCart, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { Product } from '@/types/product';
@@ -57,44 +56,21 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           <div className="mb-6 md:mb-8">
             <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-4">Media</h3>
             <div className="grid grid-cols-1 gap-4 md:gap-6">
-              {/* Photo */}
-              {product.photo ? (
-                <div className="rounded-xl overflow-hidden bg-white/5">
-                  <img 
-                    src={product.photo} 
-                    alt={product.sku}
-                    className="w-full h-48 md:h-64 object-cover"
-                  />
+              {/* Photo Placeholder */}
+              <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                <div className="text-center text-purple-300">
+                  <Image className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
+                  <p className="text-xs md:text-sm opacity-50">Photo will be added soon</p>
                 </div>
-              ) : (
-                <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
-                  <div className="text-center text-purple-300">
-                    <Image className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
-                    <p className="text-xs md:text-sm opacity-50">Photo will be added soon</p>
-                  </div>
-                </div>
-              )}
+              </div>
 
-              {/* Video */}
-              {product.video ? (
-                <div className="rounded-xl overflow-hidden bg-white/5">
-                  <video 
-                    src={product.video}
-                    controls
-                    className="w-full h-48 md:h-64 object-cover"
-                    poster={product.photo}
-                  >
-                    Your browser does not support the video tag.
-                  </video>
+              {/* Video Placeholder */}
+              <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                <div className="text-center text-purple-300">
+                  <Video className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
+                  <p className="text-xs md:text-sm opacity-50">Video will be added soon</p>
                 </div>
-              ) : (
-                <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
-                  <div className="text-center text-purple-300">
-                    <Video className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
-                    <p className="text-xs md:text-sm opacity-50">Video will be added soon</p>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
 
