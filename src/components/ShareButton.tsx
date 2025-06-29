@@ -38,7 +38,7 @@ export const ShareButton = ({ product, variant = 'icon', size = 'sm' }: ShareBut
       ? `${product.minPrice} AED` 
       : `${product.minPrice}-${product.maxPrice} AED`;
     
-    return `Check out this amazing product: ${product.sku}\n\n${product.features}\n\nPrice: ${price}\n\n🚚 Free delivery in UAE\n💎 Premium quality guaranteed\n🎁 Free gifts included\n\nOrder now with cash on delivery!`;
+    return `Check out this amazing product: ${product.sku}\n\n${product.features}\n\nPrice: ${price}\n\n🚚 Free delivery in UAE\n💎 Premium quality guaranteed\n🎁 Free gifts included\n\nOrder now with cash on delivery!\n\nIntimacy Toy Shop - Dubai`;
   };
 
   // Copy link to clipboard
@@ -78,7 +78,7 @@ export const ShareButton = ({ product, variant = 'icon', size = 'sm' }: ShareBut
 
   // Share via Twitter
   const shareTwitter = () => {
-    const text = `Check out ${product.sku} - ${product.features.substring(0, 100)}...`;
+    const text = `Check out ${product.sku} - ${product.features.substring(0, 100)}... from Intimacy Toy Shop Dubai`;
     const url = generateProductUrl();
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, '_blank', 'width=600,height=400');
@@ -86,7 +86,7 @@ export const ShareButton = ({ product, variant = 'icon', size = 'sm' }: ShareBut
 
   // Share via Email
   const shareEmail = () => {
-    const subject = `Check out this product: ${product.sku}`;
+    const subject = `Check out this product: ${product.sku} - Intimacy Toy Shop`;
     const body = `${generateShareText()}\n\nView product: ${generateProductUrl()}`;
     const emailUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.open(emailUrl);
@@ -97,7 +97,7 @@ export const ShareButton = ({ product, variant = 'icon', size = 'sm' }: ShareBut
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${product.sku} - Premium Adult Product`,
+          title: `${product.sku} - Intimacy Toy Shop Dubai`,
           text: generateShareText(),
           url: generateProductUrl(),
         });

@@ -1,73 +1,73 @@
-# Welcome to your Lovable project
+# Intimacy Toy Shop - Dubai UAE
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/25415ce0-b633-4d1b-9634-b7b1951a5b39
+Premium intimate wellness products catalog for Dubai, UAE market. Features include product browsing, filtering, sharing capabilities, and WhatsApp integration for orders.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Product Catalog**: Browse premium adult products with detailed information
+- **Advanced Filtering**: Filter by category, price range, and search terms
+- **Media Gallery**: High-quality images and videos for each product
+- **WhatsApp Integration**: Direct ordering and customer support via WhatsApp
+- **Share Products**: Share individual products via social media and messaging
+- **Mobile Optimized**: Responsive design for all devices
+- **Privacy Focused**: Anonymous packaging and discrete delivery
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/25415ce0-b633-4d1b-9634-b7b1951a5b39) and start prompting.
+- **Frontend**: React 18 with TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Radix UI primitives with shadcn/ui
+- **Build Tool**: Vite
+- **State Management**: React hooks and context
 
-Changes made via Lovable will be committed automatically to this repo.
+## Key Components
 
-**Use your preferred IDE**
+- **Product Cards**: Interactive product display with hover effects
+- **Media Carousel**: Video and image gallery with fullscreen support
+- **Filter System**: Category and price range filtering
+- **Share System**: Multi-platform sharing capabilities
+- **Admin Panel**: Product management interface
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+## Product Management
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Products are managed through the data file at `src/data/products.ts`. Each product includes:
+- SKU and specifications
+- Feature descriptions
+- Price ranges
+- Media assets (images/videos)
 
-**Use GitHub Codespaces**
+## Media Assets
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **Images**: Stored in `public/images/` with naming convention `{sku}.jpeg`
+- **Videos**: Stored in `public/videos/` with naming convention `{sku}.mp4`
+- **Thumbnails**: Multiple images per product supported
 
-## What technologies are used for this project?
+## Deployment
 
-This project is built with:
+The application is optimized for static hosting and can be deployed to any modern hosting platform.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Privacy & Security
 
-## How can I deploy this project?
+- No user data collection
+- Anonymous browsing
+- Secure payment via cash on delivery
+- Discrete packaging and delivery
 
-Simply open [Lovable](https://lovable.dev/projects/25415ce0-b633-4d1b-9634-b7b1951a5b39) and click on Share -> Publish.
+## Contact
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+For business inquiries, contact via WhatsApp integration within the application.
