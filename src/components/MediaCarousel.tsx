@@ -8,13 +8,15 @@ interface MediaCarouselProps {
   autoPlay?: boolean;
   showControls?: boolean;
   className?: string;
+  isModal?: boolean; // New prop to identify modal usage
 }
 
 export const MediaCarousel = ({ 
   product, 
   autoPlay = false, 
   showControls = true,
-  className = ""
+  className = "",
+  isModal = false // Default to false for homepage
 }: MediaCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -151,7 +153,7 @@ export const MediaCarousel = ({
           <div className="relative w-full h-full">
             <video
               ref={videoRef}
-              className="w-full h-full object-cover"
+              className={`w-full h-full ${isModal ? 'object-contain' : 'object-cover'}`}
               onPlay={handleVideoPlay}
               onPause={handleVideoPause}
               onLoadedData={handleVideoLoad}
