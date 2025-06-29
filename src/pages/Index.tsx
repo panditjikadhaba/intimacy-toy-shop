@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, X, Shield, Truck, Gift, MessageCircle } from 'lucide-react';
 import { ProductCard } from '@/components/ProductCard';
 import { ProductModal } from '@/components/ProductModal';
@@ -12,6 +12,21 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Check for shared product in URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedProductSku = urlParams.get('product');
+    
+    if (sharedProductSku) {
+      const sharedProduct = products.find(p => p.sku === sharedProductSku);
+      if (sharedProduct) {
+        setSelectedProduct(sharedProduct);
+        // Clean up URL without refreshing
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  }, []);
 
   const categories = useMemo(() => {
     const cats = new Set<string>();

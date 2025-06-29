@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Image, ShoppingCart, Video } from 'lucide-react';
+import { Image, ShoppingCart, Video, Share2 } from 'lucide-react';
 import { getVideoUrl } from '@/utils/mediaUtils';
+import { ShareButton } from '@/components/ShareButton';
 import type { Product } from '@/types/product';
 
 interface ProductCardProps {
@@ -76,6 +77,10 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
     setTimeout(() => setIsHovered(false), 2000); // Keep playing for 2 seconds after touch
   };
 
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent opening the modal
+  };
+
   return (
     <div
       ref={cardRef}
@@ -86,7 +91,13 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full flex flex-col">
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full flex flex-col relative">
+        
+        {/* Share Button - Top Right */}
+        <div className="absolute top-3 right-3 z-10" onClick={handleShareClick}>
+          <ShareButton product={product} />
+        </div>
+
         {/* Media Section */}
         <div className="mb-4 h-40 md:h-48 bg-white/5 rounded-lg flex items-center justify-center border-2 border-dashed border-white/20 relative overflow-hidden">
           {videoUrl ? (
@@ -110,7 +121,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
                 </div>
               </div>
               
-              <div className="absolute top-2 right-2">
+              <div className="absolute top-2 left-2">
                 <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                   Video Available
                 </div>

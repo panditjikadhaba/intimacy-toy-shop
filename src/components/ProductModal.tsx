@@ -2,6 +2,7 @@ import { X, Image, Video, ShoppingCart, MessageCircle, Maximize2, Minimize2 } fr
 import { Button } from '@/components/ui/button';
 import { useState, useRef, useEffect } from 'react';
 import { getVideoUrl } from '@/utils/mediaUtils';
+import { ShareButton } from '@/components/ShareButton';
 import type { Product } from '@/types/product';
 
 interface ProductModalProps {
@@ -119,19 +120,25 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
             <div className={`inline-block px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium text-white bg-gradient-to-r ${getCategoryColor(product.features)}`}>
               {product.sku}
             </div>
-            <button
-              onClick={onClose}
-              className="text-purple-300 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
-            >
-              <X className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
+            <div className="flex items-center gap-2">
+              <ShareButton product={product} variant="button" size="md" />
+              <button
+                onClick={onClose}
+                className="text-purple-300 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+              >
+                <X className="w-5 h-5 md:w-6 md:h-6" />
+              </button>
+            </div>
           </div>
         </div>
 
         <div className="p-4 md:p-8">
           {/* Media Section */}
           <div className="mb-6 md:mb-8">
-            <h3 className="text-purple-300 text-sm uppercase tracking-wide mb-4">Product Media</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-purple-300 text-sm uppercase tracking-wide">Product Media</h3>
+              <ShareButton product={product} variant="icon" size="md" />
+            </div>
             <div className="grid grid-cols-1 gap-4 md:gap-6">
               
               {/* Video Section */}
@@ -268,14 +275,18 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 Buy Now - Cash on Delivery
               </Button>
               
-              <Button 
-                onClick={handleWhatsAppChat}
-                variant="outline"
-                className="w-full border-green-400 text-green-400 hover:bg-green-400 hover:text-white font-medium py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300"
-              >
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Chat on WhatsApp
-              </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Button 
+                  onClick={handleWhatsAppChat}
+                  variant="outline"
+                  className="border-green-400 text-green-400 hover:bg-green-400 hover:text-white font-medium py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Chat on WhatsApp
+                </Button>
+                
+                <ShareButton product={product} variant="button" size="lg" />
+              </div>
             </div>
 
             {/* Free Gifts */}
