@@ -113,7 +113,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-t-3xl md:rounded-3xl w-full md:max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto border border-purple-400/30">
+      <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-t-3xl md:rounded-3xl w-full md:max-w-6xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto border border-purple-400/30">
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-br from-slate-900 to-purple-900 p-4 md:p-6 border-b border-purple-400/20">
           <div className="flex justify-between items-start">
@@ -147,12 +147,18 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                   <div 
                     ref={fullscreenContainerRef}
                     className={`relative bg-black rounded-xl overflow-hidden border border-purple-400/30 ${
-                      isFullscreen ? 'fixed inset-0 z-[60] rounded-none' : 'h-48 md:h-64'
+                      isFullscreen 
+                        ? 'fixed inset-0 z-[60] rounded-none flex items-center justify-center' 
+                        : 'w-full aspect-video max-h-[60vh]'
                     }`}
                   >
                     <video
                       ref={videoRef}
-                      className="w-full h-full object-contain"
+                      className={`${
+                        isFullscreen 
+                          ? 'max-w-full max-h-full object-contain' 
+                          : 'w-full h-full object-cover'
+                      }`}
                       onPlay={() => setIsVideoPlaying(true)}
                       onPause={() => setIsVideoPlaying(false)}
                       onEnded={() => setIsVideoPlaying(false)}
@@ -170,7 +176,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                     {/* Fullscreen Toggle Button */}
                     <button
                       onClick={toggleFullscreen}
-                      className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-full p-2 hover:bg-black/70 transition-colors"
+                      className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-full p-2 hover:bg-black/70 transition-colors z-10"
                     >
                       {isFullscreen ? (
                         <Minimize2 className="w-4 h-4 text-white" />
@@ -200,7 +206,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 </div>
               ) : (
                 /* Video Placeholder */
-                <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+                <div className="w-full aspect-video max-h-[60vh] bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
                   <div className="text-center text-purple-300">
                     <Video className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
                     <p className="text-xs md:text-sm opacity-50">Video will be added soon</p>
@@ -209,7 +215,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
               )}
 
               {/* Photo Placeholder */}
-              <div className="h-48 md:h-64 bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
+              <div className="w-full aspect-video max-h-[40vh] bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
                 <div className="text-center text-purple-300">
                   <Image className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
                   <p className="text-xs md:text-sm opacity-50">Photo will be added soon</p>
