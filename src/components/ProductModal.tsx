@@ -145,6 +145,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 product={product}
                 autoPlay={true}
                 showControls={true}
+                isModal={true}
                 className={isFullscreen ? 'w-full h-full max-w-4xl max-h-full' : 'w-full h-full'}
               />
               
