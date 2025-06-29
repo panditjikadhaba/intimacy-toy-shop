@@ -101,3 +101,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide scrollbar for thumbnail navigation */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
