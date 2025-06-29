@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Image, ShoppingCart, Video, Share2 } from 'lucide-react';
-import { getVideoUrl } from '@/utils/mediaUtils';
+import { ShoppingCart, Share2 } from 'lucide-react';
+import { MediaCarousel } from '@/components/MediaCarousel';
 import { ShareButton } from '@/components/ShareButton';
 import type { Product } from '@/types/product';
 
@@ -12,7 +12,6 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onClick }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isInView, setIsInView] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const getCategoryColor = (features: string) => {
@@ -24,8 +23,6 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
     if (f.includes('doll')) return 'from-amber-500 to-orange-500';
     return 'from-gray-500 to-slate-500';
   };
-
-  const videoUrl = getVideoUrl(product.sku);
 
   // Intersection Observer for autoplay when in view
   useEffect(() => {
@@ -43,20 +40,6 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
     return () => observer.disconnect();
   }, []);
 
-  // Handle autoplay logic
-  useEffect(() => {
-    if (videoRef.current && videoUrl) {
-      if (isInView || isHovered) {
-        videoRef.current.play().catch(() => {
-          // Autoplay failed, which is normal for some browsers
-        });
-      } else {
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
-      }
-    }
-  }, [isInView, isHovered, videoUrl]);
-
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -68,9 +51,6 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
   // Handle touch events for mobile
   const handleTouchStart = () => {
     setIsHovered(true);
-    if (videoRef.current && videoUrl) {
-      videoRef.current.play().catch(() => {});
-    }
   };
 
   const handleTouchEnd = () => {
@@ -99,40 +79,13 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
         </div>
 
         {/* Media Section */}
-        <div className="mb-4 h-40 md:h-48 bg-white/5 rounded-lg flex items-center justify-center border-2 border-dashed border-white/20 relative overflow-hidden">
-          {videoUrl ? (
-            <div className="relative w-full h-full">
-              <video 
-                ref={videoRef}
-                className="w-full h-full object-cover rounded-lg"
-                preload="metadata"
-                muted
-                loop
-                playsInline
-                onError={() => console.log('Video failed to load:', videoUrl)}
-              >
-                <source src={videoUrl} type="video/mp4" />
-              </video>
-              
-              {/* Video overlay when not playing */}
-              <div className={`absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity duration-300 ${isHovered || isInView ? 'opacity-0' : 'opacity-100'}`}>
-                <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                  <Video className="w-6 h-6 text-white" />
-                </div>
-              </div>
-              
-              <div className="absolute top-2 left-2">
-                <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                  Video Available
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center text-purple-300">
-              <Image className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs md:text-sm opacity-50">Media coming soon</p>
-            </div>
-          )}
+        <div className="mb-4 h-40 md:h-48 rounded-lg overflow-hidden">
+          <MediaCarousel 
+            product={product}
+            autoPlay={isInView || isHovered}
+            showControls={false}
+            className="w-full h-full"
+          />
         </div>
 
         {/* SKU Badge */}
@@ -172,7 +125,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
 
         {/* Hover Effect - Desktop */}
         <div className={`mt-4 text-purple-300 text-sm transition-opacity duration-300 hidden md:block ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-          {videoUrl ? 'Tap to view video & details →' : 'Tap to view details →'}
+          Tap to view details & more media →
         </div>
       </div>
     </div>

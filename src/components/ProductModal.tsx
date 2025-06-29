@@ -1,7 +1,7 @@
-import { X, Image, Video, ShoppingCart, MessageCircle, Maximize2, Minimize2 } from 'lucide-react';
+import { X, ShoppingCart, MessageCircle, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useRef, useEffect } from 'react';
-import { getVideoUrl } from '@/utils/mediaUtils';
+import { MediaCarousel } from '@/components/MediaCarousel';
 import { ShareButton } from '@/components/ShareButton';
 import type { Product } from '@/types/product';
 
@@ -12,9 +12,7 @@ interface ProductModalProps {
 }
 
 export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
 
   if (!isOpen) return null;
@@ -97,20 +95,6 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
     };
   }, []);
 
-  // Auto-play video when modal opens
-  useEffect(() => {
-    if (isOpen && videoRef.current) {
-      const timer = setTimeout(() => {
-        videoRef.current?.play().catch(() => {
-          // Autoplay failed, which is normal
-        });
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-  const videoUrl = getVideoUrl(product.sku);
-
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-t-3xl md:rounded-3xl w-full md:max-w-6xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto border border-purple-400/30">
@@ -137,90 +121,41 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           <div className="mb-6 md:mb-8">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-purple-300 text-sm uppercase tracking-wide">Product Media</h3>
-              <ShareButton product={product} variant="icon" size="md" />
+              <button
+                onClick={toggleFullscreen}
+                className="bg-white/10 backdrop-blur-sm rounded-full p-2 hover:bg-white/20 transition-colors"
+              >
+                {isFullscreen ? (
+                  <Minimize2 className="w-4 h-4 text-white" />
+                ) : (
+                  <Maximize2 className="w-4 h-4 text-white" />
+                )}
+              </button>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:gap-6">
+            
+            <div 
+              ref={fullscreenContainerRef}
+              className={`relative ${
+                isFullscreen 
+                  ? 'fixed inset-0 z-[70] bg-black flex items-center justify-center p-4' 
+                  : 'w-full aspect-video max-h-[60vh] rounded-xl overflow-hidden'
+              }`}
+            >
+              <MediaCarousel 
+                product={product}
+                autoPlay={true}
+                showControls={true}
+                className={isFullscreen ? 'w-full h-full max-w-4xl max-h-full' : 'w-full h-full'}
+              />
               
-              {/* Video Section */}
-              {videoUrl ? (
-                <div className="relative">
-                  <div 
-                    ref={fullscreenContainerRef}
-                    className={`relative bg-black rounded-xl overflow-hidden border border-purple-400/30 ${
-                      isFullscreen 
-                        ? 'fixed inset-0 z-[60] rounded-none flex items-center justify-center' 
-                        : 'w-full aspect-video max-h-[60vh]'
-                    }`}
-                  >
-                    <video
-                      ref={videoRef}
-                      className={`${
-                        isFullscreen 
-                          ? 'max-w-full max-h-full object-cover' 
-                          : 'w-full h-full object-cover'
-                      }`}
-                      onPlay={() => setIsVideoPlaying(true)}
-                      onPause={() => setIsVideoPlaying(false)}
-                      onEnded={() => setIsVideoPlaying(false)}
-                      controls
-                      preload="metadata"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                    >
-                      <source src={videoUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                    
-                    {/* Fullscreen Toggle Button */}
-                    <button
-                      onClick={toggleFullscreen}
-                      className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-full p-2 hover:bg-black/70 transition-colors z-10"
-                    >
-                      {isFullscreen ? (
-                        <Minimize2 className="w-4 h-4 text-white" />
-                      ) : (
-                        <Maximize2 className="w-4 h-4 text-white" />
-                      )}
-                    </button>
-                    
-                    {/* Video Label */}
-                    {!isFullscreen && (
-                      <div className="absolute bottom-4 left-4">
-                        <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1">
-                          <p className="text-white text-xs font-medium">Product Demo Video</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Fullscreen Exit Instructions */}
-                    {isFullscreen && (
-                      <div className="absolute top-4 left-4">
-                        <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2">
-                          <p className="text-white text-sm">Press ESC or click minimize to exit fullscreen</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                /* Video Placeholder */
-                <div className="w-full aspect-video max-h-[60vh] bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
-                  <div className="text-center text-purple-300">
-                    <Video className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
-                    <p className="text-xs md:text-sm opacity-50">Video will be added soon</p>
+              {/* Fullscreen Exit Instructions */}
+              {isFullscreen && (
+                <div className="absolute top-4 left-4">
+                  <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2">
+                    <p className="text-white text-sm">Press ESC or click minimize to exit fullscreen</p>
                   </div>
                 </div>
               )}
-
-              {/* Photo Placeholder */}
-              <div className="w-full aspect-video max-h-[40vh] bg-white/5 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
-                <div className="text-center text-purple-300">
-                  <Image className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 opacity-50" />
-                  <p className="text-xs md:text-sm opacity-50">Photo will be added soon</p>
-                </div>
-              </div>
             </div>
           </div>
 
