@@ -157,7 +157,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                       className={`${
                         isFullscreen 
                           ? 'max-w-full max-h-full object-contain' 
-                          : 'w-full h-full object-cover'
+                          : 'w-full h-full object-contain'
                       }`}
                       onPlay={() => setIsVideoPlaying(true)}
                       onPause={() => setIsVideoPlaying(false)}
