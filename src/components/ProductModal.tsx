@@ -1,6 +1,6 @@
-import { X, Image, Video, ShoppingCart, MessageCircle, Play, Pause } from 'lucide-react';
+import { X, Image, Video, ShoppingCart, MessageCircle, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getVideoUrl } from '@/utils/mediaUtils';
 import type { Product } from '@/types/product';
 
@@ -12,7 +12,9 @@ interface ProductModalProps {
 
 export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const fullscreenContainerRef = useRef<HTMLDivElement>(null);
 
   if (!isOpen) return null;
 
@@ -38,16 +40,73 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
     window.open(whatsappUrl, '_blank');
   };
 
-  const toggleVideo = () => {
-    if (videoRef.current) {
-      if (isVideoPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
+  const toggleFullscreen = async () => {
+    if (!isFullscreen) {
+      // Enter fullscreen
+      if (fullscreenContainerRef.current) {
+        try {
+          if (fullscreenContainerRef.current.requestFullscreen) {
+            await fullscreenContainerRef.current.requestFullscreen();
+          } else if ((fullscreenContainerRef.current as any).webkitRequestFullscreen) {
+            await (fullscreenContainerRef.current as any).webkitRequestFullscreen();
+          } else if ((fullscreenContainerRef.current as any).msRequestFullscreen) {
+            await (fullscreenContainerRef.current as any).msRequestFullscreen();
+          }
+          setIsFullscreen(true);
+        } catch (error) {
+          console.log('Fullscreen request failed:', error);
+        }
       }
-      setIsVideoPlaying(!isVideoPlaying);
+    } else {
+      // Exit fullscreen
+      try {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
+        } else if ((document as any).msExitFullscreen) {
+          await (document as any).msExitFullscreen();
+        }
+        setIsFullscreen(false);
+      } catch (error) {
+        console.log('Exit fullscreen failed:', error);
+      }
     }
   };
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = !!(
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).msFullscreenElement
+      );
+      setIsFullscreen(isCurrentlyFullscreen);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  // Auto-play video when modal opens
+  useEffect(() => {
+    if (isOpen && videoRef.current) {
+      const timer = setTimeout(() => {
+        videoRef.current?.play().catch(() => {
+          // Autoplay failed, which is normal
+        });
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const videoUrl = getVideoUrl(product.sku);
 
@@ -77,32 +136,59 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
               
               {/* Video Section */}
               {videoUrl ? (
-                <div className="relative h-48 md:h-64 bg-black rounded-xl overflow-hidden border border-purple-400/30">
-                  <video
-                    ref={videoRef}
-                    className="w-full h-full object-cover"
-                    onPlay={() => setIsVideoPlaying(true)}
-                    onPause={() => setIsVideoPlaying(false)}
-                    onEnded={() => setIsVideoPlaying(false)}
-                    controls
-                    preload="metadata"
+                <div className="relative">
+                  <div 
+                    ref={fullscreenContainerRef}
+                    className={`relative bg-black rounded-xl overflow-hidden border border-purple-400/30 ${
+                      isFullscreen ? 'fixed inset-0 z-[60] rounded-none' : 'h-48 md:h-64'
+                    }`}
                   >
-                    <source src={videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  
-                  {/* Custom Play Button Overlay */}
-                  <div className="absolute top-4 left-4">
-                    <div className="bg-black/50 backdrop-blur-sm rounded-full p-2">
-                      <Video className="w-4 h-4 text-white" />
-                    </div>
-                  </div>
-                  
-                  {/* Video Label */}
-                  <div className="absolute bottom-4 left-4">
-                    <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1">
-                      <p className="text-white text-xs font-medium">Product Demo Video</p>
-                    </div>
+                    <video
+                      ref={videoRef}
+                      className="w-full h-full object-contain"
+                      onPlay={() => setIsVideoPlaying(true)}
+                      onPause={() => setIsVideoPlaying(false)}
+                      onEnded={() => setIsVideoPlaying(false)}
+                      controls
+                      preload="metadata"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    >
+                      <source src={videoUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    
+                    {/* Fullscreen Toggle Button */}
+                    <button
+                      onClick={toggleFullscreen}
+                      className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-full p-2 hover:bg-black/70 transition-colors"
+                    >
+                      {isFullscreen ? (
+                        <Minimize2 className="w-4 h-4 text-white" />
+                      ) : (
+                        <Maximize2 className="w-4 h-4 text-white" />
+                      )}
+                    </button>
+                    
+                    {/* Video Label */}
+                    {!isFullscreen && (
+                      <div className="absolute bottom-4 left-4">
+                        <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1">
+                          <p className="text-white text-xs font-medium">Product Demo Video</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Fullscreen Exit Instructions */}
+                    {isFullscreen && (
+                      <div className="absolute top-4 left-4">
+                        <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2">
+                          <p className="text-white text-sm">Press ESC or click minimize to exit fullscreen</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (

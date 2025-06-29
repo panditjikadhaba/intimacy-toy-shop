@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Image, ShoppingCart, Video } from 'lucide-react';
 import { getVideoUrl } from '@/utils/mediaUtils';
 import type { Product } from '@/types/product';
@@ -10,6 +10,9 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product, onClick }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const getCategoryColor = (features: string) => {
     const f = features.toLowerCase();
@@ -23,12 +26,65 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
 
   const videoUrl = getVideoUrl(product.sku);
 
+  // Intersection Observer for autoplay when in view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.5 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Handle autoplay logic
+  useEffect(() => {
+    if (videoRef.current && videoUrl) {
+      if (isInView || isHovered) {
+        videoRef.current.play().catch(() => {
+          // Autoplay failed, which is normal for some browsers
+        });
+      } else {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    }
+  }, [isInView, isHovered, videoUrl]);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  // Handle touch events for mobile
+  const handleTouchStart = () => {
+    setIsHovered(true);
+    if (videoRef.current && videoUrl) {
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setTimeout(() => setIsHovered(false), 2000); // Keep playing for 2 seconds after touch
+  };
+
   return (
     <div
+      ref={cardRef}
       className="group cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
       onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full flex flex-col">
         {/* Media Section */}
@@ -36,17 +92,24 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
           {videoUrl ? (
             <div className="relative w-full h-full">
               <video 
+                ref={videoRef}
                 className="w-full h-full object-cover rounded-lg"
                 preload="metadata"
                 muted
+                loop
+                playsInline
+                onError={() => console.log('Video failed to load:', videoUrl)}
               >
                 <source src={videoUrl} type="video/mp4" />
               </video>
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+              
+              {/* Video overlay when not playing */}
+              <div className={`absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity duration-300 ${isHovered || isInView ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
                   <Video className="w-6 h-6 text-white" />
                 </div>
               </div>
+              
               <div className="absolute top-2 right-2">
                 <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                   Video Available
