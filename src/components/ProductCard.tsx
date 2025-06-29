@@ -104,7 +104,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
             <div className="relative w-full h-full">
               <video 
                 ref={videoRef}
-                className="w-full h-full object-contain rounded-lg"
+                className="w-full h-full object-cover rounded-lg"
                 preload="metadata"
                 muted
                 loop

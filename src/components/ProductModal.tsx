@@ -156,8 +156,8 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                       ref={videoRef}
                       className={`${
                         isFullscreen 
-                          ? 'max-w-full max-h-full object-contain' 
-                          : 'w-full h-full object-contain'
+                          ? 'max-w-full max-h-full object-cover' 
+                          : 'w-full h-full object-cover'
                       }`}
                       onPlay={() => setIsVideoPlaying(true)}
                       onPause={() => setIsVideoPlaying(false)}
@@ -250,7 +250,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
               <div className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 {product.minPrice === product.maxPrice 
                   ? `${product.minPrice} AED`
-                  : `${product.minPrice}-${product.maxPrice} AED`
+                  : `${product.maxPrice} AED`
                 }
               </div>
             </div>
